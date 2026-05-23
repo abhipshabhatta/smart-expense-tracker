@@ -9,7 +9,6 @@ app = Flask(__name__)
 DB_NAME = "database.db"
 
 
-# ---------------- DATABASE SETUP ----------------
 def create_table():
     connection = sqlite3.connect(DB_NAME)
     cursor = connection.cursor()
@@ -28,13 +27,22 @@ def create_table():
     connection.close()
 
 
-# ---------------- HOME PAGE ----------------
 @app.route("/")
 def home():
+
+    search = request.args.get("search", "")
+
     connection = sqlite3.connect(DB_NAME)
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM expenses ORDER BY date DESC")
+    query = """
+        SELECT * FROM expenses
+        WHERE title LIKE ?
+        OR category LIKE ?
+        ORDER BY date DESC
+    """
+
+    cursor.execute(query, (f"%{search}%", f"%{search}%"))
     expenses = cursor.fetchall()
 
     cursor.execute("SELECT SUM(amount) FROM expenses")
@@ -60,9 +68,9 @@ def home():
     )
 
 
-# ---------------- ADD EXPENSE ----------------
 @app.route("/add", methods=["POST"])
 def add_expense():
+
     title = request.form["title"]
     amount = request.form["amount"]
     category = request.form["category"]
@@ -82,9 +90,9 @@ def add_expense():
     return redirect("/")
 
 
-# ---------------- DELETE EXPENSE ----------------
 @app.route("/delete/<int:id>")
 def delete_expense(id):
+
     connection = sqlite3.connect(DB_NAME)
     cursor = connection.cursor()
 
@@ -96,9 +104,9 @@ def delete_expense(id):
     return redirect("/")
 
 
-# ---------------- EXPORT CSV ----------------
 @app.route("/export")
 def export_csv():
+
     connection = sqlite3.connect(DB_NAME)
     cursor = connection.cursor()
 
@@ -114,7 +122,13 @@ def export_csv():
 
     writer = csv.writer(response.stream)
 
-    writer.writerow(["ID", "Title", "Amount", "Category", "Date"])
+    writer.writerow([
+        "ID",
+        "Title",
+        "Amount",
+        "Category",
+        "Date"
+    ])
 
     for expense in expenses:
         writer.writerow(expense)
@@ -122,7 +136,6 @@ def export_csv():
     return response
 
 
-# ---------------- RUN APP ----------------
 if __name__ == "__main__":
     create_table()
     app.run(debug=True)

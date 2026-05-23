@@ -1,6 +1,6 @@
 console.log("script loaded");
 
-// ---------------- PAGE SWITCHING ----------------
+//page switching
 function showPage(pageId) {
 
     const pages = document.querySelectorAll(".page");
@@ -16,7 +16,7 @@ function showPage(pageId) {
     }
 }
 
-// ---------------- DARK MODE ----------------
+//darkmode
 function toggleDarkMode() {
     document.body.classList.toggle("dark");
 
@@ -27,7 +27,6 @@ function toggleDarkMode() {
     }
 }
 
-// ---------------- INIT ----------------
 window.onload = function () {
 
     console.log("DOM ready");
