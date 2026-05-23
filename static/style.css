@@ -1,7 +1,28 @@
+/* BASE */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f4f6fb;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s ease;
+}
+
+/* LIGHT THEME */
+:root {
+    --bg: #f4f6fb;
+    --card: white;
+    --text: #111;
+    --sidebar: #1e1e2f;
+    --accent: #4e54c8;
+}
+
+/* DARK THEME */
+.dark {
+    --bg: #0f111a;
+    --card: #1a1d2b;
+    --text: #ffffff;
+    --sidebar: #000000;
+    --accent: #8f94fb;
 }
 
 /* LAYOUT */
@@ -13,26 +34,30 @@ body {
 .sidebar {
     width: 220px;
     height: 100vh;
-    background: #1e1e2f;
+    background: var(--sidebar);
     color: white;
     padding: 20px;
     position: fixed;
 }
 
-.sidebar h2 {
-    margin-bottom: 30px;
-}
-
 .sidebar a {
     display: block;
     color: #bbb;
-    text-decoration: none;
     margin: 15px 0;
-    font-size: 14px;
+    cursor: pointer;
 }
 
 .sidebar a:hover {
     color: white;
+}
+
+/* DARK BUTTON */
+.dark-btn {
+    margin-top: 20px;
+    padding: 8px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
 }
 
 /* MAIN */
@@ -42,50 +67,20 @@ body {
     width: 100%;
 }
 
-/* CARDS */
-.cards {
-    display: flex;
-    gap: 20px;
-}
-
+/* CARD */
 .card {
-    background: white;
+    background: var(--card);
     padding: 20px;
     border-radius: 12px;
     margin-top: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
 }
-
-.highlight {
-    background: linear-gradient(135deg, #4e54c8, #8f94fb);
-    color: white;
-    font-size: 20px;
-}
-
-/* FORM */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-input, select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-button {
-    background: #4e54c8;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #3b40a4;
+/* ANALYTICS GRID */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
 }
 
 /* TABLE */
@@ -96,10 +91,42 @@ table {
 
 th, td {
     padding: 12px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #ddd;
 }
 
+/* BUTTON */
+button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* DELETE */
 .delete {
     color: red;
     text-decoration: none;
+}
+
+/* HIDE PAGES */
+.hidden {
+    display: none;
+}
+
+/*Fade animation*/
+.fade-in {
+    animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

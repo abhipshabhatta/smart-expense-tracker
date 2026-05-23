@@ -1,29 +1,44 @@
-const labels = categoryData.map(item => item[0]);
-const values = categoryData.map(item => item[1]);
+console.log("script loaded");
 
-const ctx = document.getElementById("expenseChart");
+// ---------------- PAGE SWITCHING ----------------
+function showPage(pageId) {
 
-new Chart(ctx, {
-    type: "doughnut",
-    data: {
-        labels: labels,
-        datasets: [{
-            data: values,
-            backgroundColor: [
-                "#4e54c8",
-                "#8f94fb",
-                "#ff6b6b",
-                "#feca57",
-                "#1dd1a1"
-            ]
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: "bottom"
-            }
-        }
+    const pages = document.querySelectorAll(".page");
+
+    pages.forEach(page => {
+        page.classList.add("hidden");
+    });
+
+    const activePage = document.getElementById(pageId);
+
+    if (activePage) {
+        activePage.classList.remove("hidden");
     }
-});
+}
+
+// ---------------- DARK MODE ----------------
+function toggleDarkMode() {
+    document.body.classList.toggle("dark");
+
+    if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+    } else {
+        localStorage.setItem("theme", "light");
+    }
+}
+
+// ---------------- INIT ----------------
+window.onload = function () {
+
+    console.log("DOM ready");
+
+    // theme load
+    const theme = localStorage.getItem("theme");
+
+    if (theme === "dark") {
+        document.body.classList.add("dark");
+    }
+
+    // default page
+    showPage("dashboard");
+};

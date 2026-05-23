@@ -15,110 +15,129 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
 
-        <h2>💰 ExpenseApp</h2>
+        <h2>ExpenseApp</h2>
 
-        <a href="#">🏠 Dashboard</a>
-        <a href="#add">➕ Add Expense</a>
-        <a href="#analytics">📊 Analytics</a>
+        <a onclick="showPage('dashboard')">🏠 Dashboard</a>
+        <a onclick="showPage('add')">➕ Add Expense</a>
+        <a onclick="showPage('analytics')">📊 Analytics</a>
         <a href="/export">⬇ Export CSV</a>
+
+        <button onclick="toggleDarkMode()" class="dark-btn">
+            Toggle Dark Mode
+        </button>
 
     </div>
 
     <!-- MAIN -->
     <div class="main">
 
-        <h1>Dashboard</h1>
+        <!-- DASHBOARD PAGE -->
+        <div class="page" id="dashboard">
 
-        <!-- TOP CARDS -->
-        <div class="cards">
+            <h1>Dashboard</h1>
 
             <div class="card highlight">
                 <h3>Total Spent</h3>
                 <p>€{{ "%.2f"|format(total) }}</p>
             </div>
 
+            <div class="card">
+                <h2>Recent Expenses</h2>
+
+                <table>
+                    <tr>
+                        <th>Title</th>
+                        <th>Amount</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+
+                    {% for expense in expenses %}
+
+                    <tr class="fade-in">
+                        <td>{{ expense[1] }}</td>
+                        <td>€{{ "%.2f"|format(expense[2]) }}</td>
+                        <td>{{ expense[3] }}</td>
+                        <td>{{ expense[4] }}</td>
+                        <td>
+                            <a class="delete" href="/delete/{{ expense[0] }}">Delete</a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </table>
+            </div>
+
         </div>
 
-        <!-- CHART -->
-        <div class="card" id="analytics">
-            <h2>Expense Breakdown</h2>
-            <canvas id="expenseChart"></canvas>
+        <!-- ADD PAGE -->
+        <div class="page hidden" id="add">
+
+            <h1>Add Expense</h1>
+
+            <div class="card">
+
+                <form action="/add" method="POST">
+
+                    <input type="text" name="title" placeholder="Title" required>
+                    <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+
+                    <select name="category">
+                        <option>Food</option>
+                        <option>Transport</option>
+                        <option>Shopping</option>
+                        <option>Bills</option>
+                        <option>Other</option>
+                    </select>
+
+                    <input type="date" name="date" required>
+
+                    <button type="submit">Add Expense</button>
+
+                </form>
+
+            </div>
+
         </div>
 
-        <!-- ADD EXPENSE -->
-        <div class="card" id="add">
-            <h2>Add Expense</h2>
+        <!-- ANALYTICS PAGE -->
+        <div class="page hidden" id="analytics">
 
-            <form action="/add" method="POST">
+    <h1>Analytics</h1>
 
-                <input type="text" name="title" placeholder="Title" required>
-                <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+    <!-- INSIGHT CARDS -->
+    <div class="analytics-grid">
 
-                <select name="category">
-                    <option>Food</option>
-                    <option>Transport</option>
-                    <option>Shopping</option>
-                    <option>Bills</option>
-                    <option>Other</option>
-                </select>
-
-                <input type="date" name="date" required>
-
-                <button type="submit">Add</button>
-            </form>
-        </div>
-
-        <!-- SEARCH -->
         <div class="card">
-
-            <h2>Search</h2>
-
-            <form method="GET" action="/">
-                <input type="text" name="search" placeholder="Search expenses">
-                <button type="submit">Search</button>
-            </form>
-
+            <h3>Total Spending</h3>
+            <p>€{{ "%.2f"|format(total) }}</p>
         </div>
 
-        <!-- TABLE -->
         <div class="card">
-
-            <h2>Expenses</h2>
-
-            <table>
-
-                <tr>
-                    <th>Title</th>
-                    <th>Amount</th>
-                    <th>Category</th>
-                    <th>Date</th>
-                    <th></th>
-                </tr>
-
-                {% for expense in expenses %}
-
-                <tr>
-                    <td>{{ expense[1] }}</td>
-                    <td>€{{ "%.2f"|format(expense[2]) }}</td>
-                    <td>{{ expense[3] }}</td>
-                    <td>{{ expense[4] }}</td>
-                    <td>
-                        <a class="delete" href="/delete/{{ expense[0] }}">Delete</a>
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </table>
-
+            <h3>Insight</h3>
+            <p>You are spending mostly on essential categories.</p>
         </div>
 
+    </div>
+
+    <!-- CHART -->
+    <div class="card">
+        <h2>Category Breakdown</h2>
+        <canvas id="expenseChart"></canvas>
     </div>
 
 </div>
 
 <script>
-    const categoryData = { category_data , tojson };
+    let categoryData = [];
+
+    try {
+        categoryData = JSON.parse('{{ category_data | tojson | safe }}');
+    } catch (e) {
+        categoryData = [];
+        console.log("Chart data error:", e);
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
